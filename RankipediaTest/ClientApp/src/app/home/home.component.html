@@ -1,0 +1,122 @@
+<div class="container">
+  <div class="row">
+    <div class="col-lg-10 mx-auto">
+      <div class="card">
+        <div class="card-body">
+          <ng-container *ngIf="!IsFormSubmitted">
+            <form class="form-signin" [formGroup]="IndustryForm" (ngSubmit)="onSubmitIndustryForm()">
+              <div class="text-center mb-4">
+                <h1 class="h3 mb-5 pb-3 font-weight-normal">Industry Form</h1>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-3">
+                  <label for="Industry">Industries</label>
+                  <select id="Industry" (change)="onChangeIndustry()" class="form-control"
+                    formControlName="IndustryName">
+                    <option value="">Choose...</option>
+                    <ng-container *ngFor="let industry of IndustriesList">
+                      <option value="{{industry.Value}}">{{industry.Name}}</option>
+                    </ng-container>
+                  </select>
+                </div>
+                <ng-container formGroupName="subGroup">
+                  <ng-container *ngIf="IsSubCategory1">
+                    <div class="form-group col-md-3">
+                      <label for="Industry">Sub Industry</label>
+                      <select (change)="onChangeSubIndustry()" id="SubIndustry1" class="form-control"
+                        formControlName="SubCategory1">
+                        <option value="">Choose...</option>
+                        <ng-container *ngFor="let subindustry of SubCategory1List">
+                          <option value="{{subindustry.Value}}">{{subindustry.Name}}</option>
+                        </ng-container>
+                      </select>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngIf="IsSubCategory2">
+                    <div class="form-group col-md-3">
+                      <label for="Industry">Sub Industry</label>
+                      <select id="SubIndustry2" class="form-control" formControlName="SubCategory2"
+                        (change)="onChangeSubIndustry1()">
+                        <option value="">Choose...</option>
+                        <ng-container *ngFor="let subindustry of SubCategory2List">
+                          <option value="{{subindustry.Value}}">{{subindustry.Name}}</option>
+                        </ng-container>
+                      </select>
+                    </div>
+                  </ng-container>
+                </ng-container>
+                <div class="form-group col-md-3">
+                  <label for="Suggestions">Suggestions</label>
+                  <div clas>
+                    <ng-autocomplete id="Suggestions" [data]="SubCategory3List" [itemTemplate]="itemTemplate"
+                      (selected)='selectEvent($event)' [searchKeyword]="keyword" formControlName="IndustryTextArea">
+                    </ng-autocomplete>
+                    <ng-template #itemTemplate let-item>
+                      <a [innerHTML]="item.Name"></a>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+              <div class="btn-submit">
+                <button type="submit" [disabled]="!IndustryForm.valid" class="btn btn-primary">Submit</button>
+              </div>
+
+            </form>
+          </ng-container>
+          <ng-container *ngIf="IsFormSubmitted">
+            <form class="form-signin" [formGroup]="IndustryViewForm">
+              <div class="text-center mb-4">
+                <h1 class="h3 mb-5 pb-3 font-weight-normal">View Form</h1>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-3">
+                  <label for="Industry">Industries</label>
+                  <select id="Industry" class="form-control" formControlName="IndustryName" disabled>
+                    <option value="">Choose...</option>
+                    <ng-container *ngFor="let industry of IndustriesList">
+                      <option value="{{industry.Value}}">{{industry.Name}}</option>
+                    </ng-container>
+                  </select>
+                </div>
+                <ng-container *ngIf="IsSubCategory1">
+                  <div class="form-group col-md-3">
+                    <label for="Industry">Sub Industry</label>
+                    <select id="SubIndustry1" class="form-control" disabled formControlName="SubCategory1">
+                      <option value="">Choose...</option>
+                      <ng-container *ngFor="let subindustry of SubCategory1List">
+                        <option value="{{subindustry.Value}}">{{subindustry.Name}}</option>
+                      </ng-container>
+                    </select>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="IsSubCategory2">
+                  <div class="form-group col-md-3">
+                    <label for="Industry">Sub Industry</label>
+                    <select id="SubIndustry2" class="form-control" formControlName="SubCategory2" disabled>
+                      <option value="">Choose...</option>
+                      <ng-container *ngFor="let subindustry of SubCategory2List">
+                        <option value="{{subindustry.Value}}">{{subindustry.Name}}</option>
+                      </ng-container>
+                    </select>
+                  </div>
+                </ng-container>
+                <div class="form-group col-md-3">
+                  <label for="Suggestions">Suggestions</label>
+                  <ng-autocomplete id="Suggestions" [data]="SubCategory3List" [itemTemplate]="itemTemplate"
+                    [disabled]="true" [searchKeyword]="keyword" formControlName="IndustryTextArea">
+                  </ng-autocomplete>
+                  <ng-template #itemTemplate let-item>
+                    <a [innerHTML]="item.Name"></a>
+                  </ng-template>
+                </div>
+              </div>
+              <div class="btn-submit">
+                <button (click)="getPreviousForm()" class="btn btn-primary">Back</button>
+              </div>
+            </form>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
