@@ -1,15 +1,15 @@
 <div class="container">
   <div class="row">
-    <div class="col-lg-10 mx-auto">
+    <div class="col-lg-5 mx-auto">
       <div class="card">
         <div class="card-body">
           <ng-container *ngIf="!IsFormSubmitted">
-            <form class="form-signin" [formGroup]="IndustryForm" (ngSubmit)="onSubmitIndustryForm()">
+            <form class="form-signin" [formGroup]="IndustryForm" (ngSubmit)="showSubmitConfirmationModal()">
               <div class="text-center mb-4">
-                <h1 class="h3 mb-5 pb-3 font-weight-normal">Industry Form</h1>
+                <h1 class="h3 mb-2 pb-3 font-weight-normal">Industry Form</h1>
               </div>
               <div class="form-row">
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-12">
                   <label for="Industry">Industries</label>
                   <select id="Industry" (change)="onChangeIndustry()" class="form-control"
                     formControlName="IndustryName">
@@ -21,7 +21,7 @@
                 </div>
                 <ng-container formGroupName="subGroup">
                   <ng-container *ngIf="IsSubCategory1">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-12">
                       <label for="Industry">Sub Industry</label>
                       <select (change)="onChangeSubIndustry()" id="SubIndustry1" class="form-control"
                         formControlName="SubCategory1">
@@ -33,7 +33,7 @@
                     </div>
                   </ng-container>
                   <ng-container *ngIf="IsSubCategory2">
-                    <div class="form-group col-md-3">
+                    <div class="form-group col-md-12">
                       <label for="Industry">Sub Industry</label>
                       <select id="SubIndustry2" class="form-control" formControlName="SubCategory2"
                         (change)="onChangeSubIndustry1()">
@@ -45,11 +45,10 @@
                     </div>
                   </ng-container>
                 </ng-container>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-12">
                   <label for="Suggestions">Suggestions</label>
                   <div clas>
-                    <ng-autocomplete id="Suggestions" [data]="SubCategory3List" [itemTemplate]="itemTemplate"
-                      (selected)='selectEvent($event)' [searchKeyword]="keyword" formControlName="IndustryTextArea">
+                    <ng-autocomplete id="Suggestions" [data]="SubCategory3List" [itemTemplate]="itemTemplate" [searchKeyword]="keyword" formControlName="IndustryTextArea">
                     </ng-autocomplete>
                     <ng-template #itemTemplate let-item>
                       <a [innerHTML]="item.Name"></a>
@@ -60,16 +59,16 @@
               <div class="btn-submit">
                 <button type="submit" [disabled]="!IndustryForm.valid" class="btn btn-primary">Submit</button>
               </div>
-
             </form>
           </ng-container>
+          <!-- SUMMARY FORM -->
           <ng-container *ngIf="IsFormSubmitted">
             <form class="form-signin" [formGroup]="IndustryViewForm">
               <div class="text-center mb-4">
-                <h1 class="h3 mb-5 pb-3 font-weight-normal">View Form</h1>
+                <h1 class="h3 mb-5 pb-3 font-weight-normal">Summary</h1>
               </div>
               <div class="form-row">
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-12">
                   <label for="Industry">Industries</label>
                   <select id="Industry" class="form-control" formControlName="IndustryName" disabled>
                     <option value="">Choose...</option>
@@ -79,7 +78,7 @@
                   </select>
                 </div>
                 <ng-container *ngIf="IsSubCategory1">
-                  <div class="form-group col-md-3">
+                  <div class="form-group col-md-12">
                     <label for="Industry">Sub Industry</label>
                     <select id="SubIndustry1" class="form-control" disabled formControlName="SubCategory1">
                       <option value="">Choose...</option>
@@ -90,7 +89,7 @@
                   </div>
                 </ng-container>
                 <ng-container *ngIf="IsSubCategory2">
-                  <div class="form-group col-md-3">
+                  <div class="form-group col-md-12">
                     <label for="Industry">Sub Industry</label>
                     <select id="SubIndustry2" class="form-control" formControlName="SubCategory2" disabled>
                       <option value="">Choose...</option>
@@ -100,7 +99,7 @@
                     </select>
                   </div>
                 </ng-container>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-12">
                   <label for="Suggestions">Suggestions</label>
                   <ng-autocomplete id="Suggestions" [data]="SubCategory3List" [itemTemplate]="itemTemplate"
                     [disabled]="true" [searchKeyword]="keyword" formControlName="IndustryTextArea">
@@ -116,6 +115,50 @@
             </form>
           </ng-container>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRMATION MODAL -->
+<div class="modal fade show" id="confirm-submit" data-backdrop="true" role="dialog" aria-modal="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Confirm</h3>
+      </div>
+      <div class="modal-body">
+        <h6 class="pl-3"> Are you sure you want to submit the following details?</h6>
+        <table class="table table-borderless">
+          <ng-container *ngIf="ViewFromData.Industry !='' ">
+            <tr>
+              <th>Industry</th>
+              <td> {{ViewFromData?.Industry}}</td>
+            </tr>
+          </ng-container>
+          <ng-container *ngIf="ViewFromData.SubIndustry1 !='' ">
+            <tr>
+              <th>Sub Industry</th>
+              <td> {{ViewFromData?.SubIndustry1}}</td>
+            </tr>
+          </ng-container>
+          <ng-container *ngIf="ViewFromData.SubIndustry2 !='' ">
+            <tr>
+              <th>Sub Industry</th>
+              <td> {{ViewFromData?.SubIndustry2}}</td>
+            </tr>
+          </ng-container>
+          <ng-container *ngIf="ViewFromData.Suggestion !='' ">
+            <tr>
+              <th>Suggestions</th>
+              <td> {{ViewFromData?.Suggestion}}</td>
+            </tr>
+          </ng-container>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button class="btn btn-primary" (click)="onSubmitIndustryForm()">Submit</button>
       </div>
     </div>
   </div>

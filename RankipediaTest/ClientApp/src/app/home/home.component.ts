@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
+import { GenericApiCallingService } from '../shared/services/global/generic-api-calling.service';
+import { ToastrService } from 'ngx-toastr';
+declare var $: any;
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
+
 export class HomeComponent implements OnInit {
 
   IsSubCategory1: boolean;
@@ -29,12 +32,22 @@ export class HomeComponent implements OnInit {
   IndustryForm: FormGroup;
   IndustryViewForm: FormGroup;
 
+  ViewFromData:
+    {
+      Industry: string,
+      SubIndustry1: string,
+      SubIndustry2: string,
+      Suggestion: string
+    };
+
   // PROPERTY NAME TO SEARCH FROM ARRAY
   keyword = 'Name';
 
   IsFormSubmitted: boolean;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+    private _GenericApiCallingService: GenericApiCallingService,
+    private toastr: ToastrService) {
     // INITILIZATIONS
     this.IsSubCategory1 = false;
     this.IsSubCategory2 = false;
@@ -45,240 +58,19 @@ export class HomeComponent implements OnInit {
     this.SubCategory2List = [];
     this.SubCategory3List = [];
 
-    this.IndustriesList = [
-      {
-        Id: 1,
-        Name: "Automotive",
-        Value: 1,
-        IsSubCategory: false,
-        SubCatergoryList: []
-      },
-      {
-        Id: 2,
-        Name: "Education",
-        Value: 2,
-        IsSubCategory: false,
-        SubCatergoryList: []
-      },
-      {
-        Id: 3,
-        Name: "Food & Beverage",
-        Value: 3,
-        IsSubCategory: false,
-        SubCatergoryList: []
-      },
-      {
-        Id: 4,
-        Name: "Healthcare",
-        Value: 4,
-        IsSubCategory: true,
-        SubCatergoryList: [
-          {
-            Id: 1,
-            Name: "Chiropractic",
-            Value: 1,
-            IsSubCategory: false,
-            SubCatergoryList: []
-          },
-          {
-            Id: 2,
-            Name: "Dental Lab Technicians",
-            Value: 2,
-            IsSubCategory: false,
-            SubCatergoryList: []
-          },
-          {
-            Id: 3,
-            Name: "Dentistry",
-            Value: 3,
-            IsSubCategory: true,
-            SubCatergoryList: [
-              {
-                Id: 1,
-                Name: "Cosmetic Dentistry",
-                Value: 1,
-                IsSubCategory: false,
-                SubCatergoryList: []
-              },
-              {
-                Id: 2,
-                Name: "Endodontics",
-                Value: 2,
-                IsSubCategory: true,
-                SubCatergoryList: [
-                  {
-                    Id: 1,
-                    Name: "Endodontics Suggestion 1",
-                    Value: 1,
-                    IsSubCategory: false,
-                    SubCatergoryList: []
-                  },
-                  {
-                    Id: 2,
-                    Name: "Endodontics Suggestion 2",
-                    Value: 2,
-                    IsSubCategory: false,
-                    SubCatergoryList: []
-                  },
-                  {
-                    Id: 3,
-                    Name: "Endodontics Suggestion 3",
-                    Value: 3,
-                    IsSubCategory: false,
-                    SubCatergoryList: []
-                  },
-                  {
-                    Id: 4,
-                    Name: "Endodontics Suggestion 4",
-                    Value: 4,
-                    IsSubCategory: false,
-                    SubCatergoryList: []
-                  }
-                ]
-              },
-              {
-                Id: 3,
-                Name: "Implant Dentistry",
-                Value: 3,
-                IsSubCategory: false,
-                SubCatergoryList: []
-              },
-              {
-                Id: 4,
-                Name: "Neuromuscular Dentistry",
-                Value: 4,
-                IsSubCategory: false,
-                SubCatergoryList: []
-              },
-              {
-                Id: 5,
-                Name: "Orthodontics",
-                Value: 5,
-                IsSubCategory: true,
-                SubCatergoryList: [
-                  {
-                    Id: 1,
-                    Name: "Orthodontics Suggestion 1",
-                    Value: 1,
-                    IsSubCategory: false,
-                    SubCatergoryList: []
-                  },
-                  {
-                    Id: 2,
-                    Name: "Orthodontics Suggestion 2",
-                    Value: 2,
-                    IsSubCategory: false,
-                    SubCatergoryList: []
-                  },
-                  {
-                    Id: 3,
-                    Name: "Orthodontics Suggestion 3",
-                    Value: 3,
-                    IsSubCategory: false,
-                    SubCatergoryList: []
-                  },
-                  {
-                    Id: 4,
-                    Name: "Orthodontics Suggestion 4",
-                    Value: 4,
-                    IsSubCategory: false,
-                    SubCatergoryList: []
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            Id: 4,
-            Name: "Dermatology",
-            Value: 4,
-            IsSubCategory: false,
-            SubCatergoryList: []
-          },
-          {
-            Id: 5,
-            Name: "Plastic Surgery",
-            Value: 5,
-            IsSubCategory: false,
-            SubCatergoryList: []
-          },
-          {
-            Id: 6,
-            Name: "Orthopedics",
-            Value: 6,
-            IsSubCategory: false,
-            SubCatergoryList: []
-          },
-        ]
-      },
-      {
-        Id: 5,
-        Name: "Automotive",
-        Value: 5,
-        IsSubCategory: false,
-        SubCatergoryList: []
-      },
-      {
-        Id: 6,
-        Name: "Home Care",
-        Value: 6,
-        IsSubCategory: false,
-        SubCatergoryList: []
-      },
-      {
-        Id: 7,
-        Name: "Legal",
-        Value: 7,
-        IsSubCategory: false,
-        SubCatergoryList: []
-      },
-      {
-        Id: 8,
-        Name: "Personal",
-        Value: 8,
-        IsSubCategory: false,
-        SubCatergoryList: []
-      },
-      {
-        Id: 9,
-        Name: "Veterinary",
-        Value: 9,
-        IsSubCategory: true,
-        SubCatergoryList: [
-          {
-            Id: 1,
-            Name: "Animal Sciences",
-            Value: 1,
-            IsSubCategory: false,
-            SubCatergoryList: []
-          },
-          {
-            Id: 2,
-            Name: "Pet Grooming",
-            Value: 2,
-            IsSubCategory: false,
-            SubCatergoryList: []
-          },
-          {
-            Id: 3,
-            Name: "Veterinary Medicine",
-            Value: 3,
-            IsSubCategory: false,
-            SubCatergoryList: []
-          },
-          {
-            Id: 4,
-            Name: "Veterinarians",
-            Value: 4,
-            IsSubCategory: false,
-            SubCatergoryList: []
-          }
-        ]
-      }
-    ];
+    this.IndustriesList = [];
+
+    this.ViewFromData =
+    {
+      Industry: "",
+      SubIndustry1: "",
+      SubIndustry2: "",
+      Suggestion: ""
+    };
   }
 
   ngOnInit(): void {
+    this.GetIndustriesList();
     // FORM INITILIZATION
     this.IndustryForm = this.formBuilder.group({
       IndustryName: ['', [Validators.required]],
@@ -343,12 +135,17 @@ export class HomeComponent implements OnInit {
 
     // IF SELECTED INDUSTRY HAS SUB CATEGORIES THEN ADD ADDITIONAL FORM VALIDATOR
     if (SelectedIndustry != null) {
+      this.ViewFromData.Industry = SelectedIndustry.Name;
       if (SelectedIndustry.IsSubCategory) {
-        this.SubCategory1List = SelectedIndustry.SubCatergoryList;
+        // this.SubCategory1List = SelectedIndustry.SubCatergoryList;
+        // API CALL TO GET SUB INDUSTRIES LIST
+        this.GetSubIndustryDetailsById(IndustryValue);
         this.IndustryForm.setControl('subGroup', this.createSubForm1())
         this.IsSubCategory1 = true;
       }
       else {
+        this.ViewFromData.SubIndustry1 = "";
+        this.ViewFromData.SubIndustry2 = "";
         this.IsSubCategory1 = false;
         this.IsSubCategory2 = false;
         this.SubCategory1List = [];
@@ -377,9 +174,11 @@ export class HomeComponent implements OnInit {
       // GET SUB SELECTED INDUSTRY DATA FROM SUB CATEGORY LIST ARRAY
       let IndustryValue = Number(SubGroup.get('SubCategory1').value);
       let SelectedSubIndustry = this.SubCategory1List.find(x => x.Id == IndustryValue);
+      
 
       // IF SELECTED INDUSTRY HAS SUB CATEGORIES THEN ADD ADDITIONAL FORM VALIDATOR
       if (SelectedSubIndustry != null) {
+        this.ViewFromData.SubIndustry1 = SelectedSubIndustry.Name;
         if (SelectedSubIndustry.IsSubCategory) {
           this.IsSubCategory2 = true;
           this.SubCategory2List = SelectedSubIndustry.SubCatergoryList;
@@ -387,6 +186,7 @@ export class HomeComponent implements OnInit {
         }
         else {
           this.IsSubCategory2 = false;
+          this.ViewFromData.SubIndustry2 = "";
           this.SubCategory2List = [];
           this.SubCategory3List = [];
           this.clearSubForm2Validators();
@@ -394,6 +194,7 @@ export class HomeComponent implements OnInit {
       }
       else {
         this.IsSubCategory2 = false;
+        this.ViewFromData.SubIndustry2 = "";
         this.SubCategory2List = [];
         this.SubCategory3List = [];
         this.clearSubForm2Validators();
@@ -411,6 +212,7 @@ export class HomeComponent implements OnInit {
 
       // IF SELECTED INDUSTRY HAS SUB CATEGORIES THEN ADD ADDITIONAL FORM VALIDATOR
       if (SelectedSubIndustry != null) {
+        this.ViewFromData.SubIndustry2 = SelectedSubIndustry.Name;
         if (SelectedSubIndustry.IsSubCategory) {
           this.SubCategory3List = SelectedSubIndustry.SubCatergoryList;
         }
@@ -428,12 +230,67 @@ export class HomeComponent implements OnInit {
   get IndustryFormValues() { return this.IndustryForm.controls; }
 
   // ON SUBMIT FORM
-  onSubmitIndustryForm() {
-    debugger;
+
+  showSubmitConfirmationModal() {
     if (this.IndustryForm.invalid) {
       return;
     }
+    let IndustryTextAreaValue = this.IndustryFormValues.IndustryTextArea.value;
+    if (IndustryTextAreaValue.Name != undefined) {
+      this.ViewFromData.Suggestion = IndustryTextAreaValue.Name;
+    } else {
+      this.ViewFromData.Suggestion = IndustryTextAreaValue;
+    }
+    $('#confirm-submit').modal('show');
+  }
+
+  onSubmitIndustryForm() {
+    if (this.IndustryForm.invalid) {
+      return;
+    }
+    this.CopyFormDataToAnotherForm();
     this.IsFormSubmitted = true;
+    // HERE WE CAN ADD THE API CALL TO SAVE THE FORM IN THE DATABASE
+    this.toastr.success('Form is submitted successfully!', 'Success!');
+    $('#confirm-submit').modal('hide');
+
+  }
+
+  // GET BACK TO THE PREVIOUS FORM
+  getPreviousForm() {
+    this.IsFormSubmitted = false;
+    this.IndustryViewForm.reset();
+  }
+
+  GetIndustriesList() {
+    this._GenericApiCallingService.GetData("Search", "GetMainIndustriesList")
+      .subscribe(
+        data => {
+          if (data != null) {
+            this.IndustriesList = data;
+          }
+        },
+        error => {
+          this.toastr.error('An error occured while processing your request!', 'Error!');
+        });
+  }
+
+  GetSubIndustryDetailsById(IndustryId) {
+    this._GenericApiCallingService.PostData("Search", "GetSubIndustryDetailsById", Number(IndustryId))
+      .subscribe(
+        data => {
+          if (data != null) {
+            this.SubCategory1List = data;
+          }
+          else {
+            this.IsSubCategory1 = false;
+          }
+        },
+        error => {
+          this.toastr.error('An error occured while processing your request!', 'Error!');
+        });
+  }
+  CopyFormDataToAnotherForm() {
     this.IndustryViewForm.reset();
     this.IndustryViewForm.get('IndustryName').setValue(this.IndustryFormValues.IndustryName.value);
     let SubCategory = this.IndustryForm.get('subGroup');
@@ -453,22 +310,13 @@ export class HomeComponent implements OnInit {
     let IndustryTextAreaValue = this.IndustryFormValues.IndustryTextArea.value;
     if (IndustryTextAreaValue.Name != undefined) {
       this.IndustryViewForm.get('IndustryTextArea').setValue(IndustryTextAreaValue.Name);
+      this.IndustryForm.get('IndustryTextArea').setValue(IndustryTextAreaValue.Name);
     } else {
       this.IndustryViewForm.get('IndustryTextArea').setValue(IndustryTextAreaValue);
+      this.IndustryForm.get('IndustryTextArea').setValue(IndustryTextAreaValue);
     }
-
-  }
-
-  // GET BACK TO THE PREVIOUS FORM
-  getPreviousForm() {
-    this.IsFormSubmitted = false;
-    this.IndustryViewForm.reset();
-  }
-
-  // SUGGESTION SELECT EVENT
-  selectEvent(item) {
-    this.IndustryForm.get('IndustryTextArea').setValue(item.Name);
     this.IndustryForm.get('IndustryTextArea').updateValueAndValidity();
   }
+
 
 }

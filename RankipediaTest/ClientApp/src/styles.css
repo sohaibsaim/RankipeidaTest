@@ -15,5 +15,17 @@ code {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 64px;
 }
+
+button:disabled {
+  cursor: no-drop;
+}
+
+.btn-submit button{
+  width: 100%;
+}
+
+.modal-backdrop.fade {
+  opacity: 0.5;
+}
+
